@@ -8,6 +8,7 @@ const courses = [
     { id: "5678", title: "Session Management", img: "/images/Session.jpg" },
     { id: "6789", title: "APIs", img: "/images/APIs.jpg" },
     { id: "7890", title: "AI", img: "/images/AI.jpg" },
+    { id: "8901", title: "Cybersecurity", img: "/images/Cyber.jpg" }
 ];
 
 export default function Dashboard() {
