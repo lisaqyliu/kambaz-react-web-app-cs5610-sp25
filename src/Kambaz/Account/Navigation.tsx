@@ -1,14 +1,32 @@
-import { Link } from "react-router-dom";
-export default function KambazNavigation() {
+import { Link, useLocation } from "react-router-dom";
+
+export default function AccountNavigation() {
+  const location = useLocation();
+
   return (
-    <div id="wd-kambaz-navigation">
-      <a href="https://www.northeastern.edu/" id="wd-neu-link" target="_blank">Northeastern</a><br/>
-      <Link to="/Kambaz/Account" id="wd-account-link">Account</Link><br/>
-      <Link to="/Kambaz/Dashboard" id="wd-dashboard-link">Dashboard</Link><br/>
-      <Link to="/Kambaz/Dashboard" id="wd-course-link">Courses</Link><br/>
-      <Link to="/Kambaz/Calendar" id="wd-calendar-link">Calendar</Link><br/>
-      <Link to="/Kambaz/Inbox" id="wd-inbox-link">Inbox</Link><br/>
-      <Link to="/Labs" id="wd-labs-link">Labs</Link><br/>
+    <div className="d-flex flex-column">
+      <Link
+        to="/Kambaz/Account/Signin"
+        className={`fs-5 text-decoration-none mb-2 d-flex align-items-center ${location.pathname.includes("Signin") ? "fw-bold text-dark" : "text-danger"}`}
+        style={location.pathname.includes("Signin") ? { borderLeft: "4px solid black", paddingLeft: "8px" } : { paddingLeft: "12px" }}
+      >
+        Signin
+      </Link>
+      <Link
+        to="/Kambaz/Account/Signup"
+        className={`fs-5 text-decoration-none mb-2 d-flex align-items-center ${location.pathname.includes("Signup") ? "fw-bold text-dark" : "text-danger"}`}
+        style={location.pathname.includes("Signup") ? { borderLeft: "4px solid black", paddingLeft: "8px" } : { paddingLeft: "12px" }}
+      >
+        Signup
+      </Link>
+      <Link
+        to="/Kambaz/Account/Profile"
+        className={`fs-5 text-decoration-none d-flex align-items-center ${location.pathname.includes("Profile") ? "fw-bold text-dark" : "text-danger"}`}
+        style={location.pathname.includes("Profile") ? { borderLeft: "4px solid black", paddingLeft: "8px" } : { paddingLeft: "12px" }}
+      >
+        Profile
+      </Link>
     </div>
-    );
+  );
 }
+
