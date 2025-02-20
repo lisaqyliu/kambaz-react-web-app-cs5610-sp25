@@ -2,7 +2,6 @@ import VariablesAndConstants from "./VariablesAndConstants";
 import VariableTypes from "./VariableTypes";
 import BooleanVariables from "./BooleanVariables";
 import IfElse from "./IfElse";
-import TernaryOperator from "./TernaryOperator"
 import LegacyFunctions from "./LegacyFunctions";
 import ArrowFunctions from "./ArrowFunctions";
 import ImpliedReturn from "./ImpliedReturn";
