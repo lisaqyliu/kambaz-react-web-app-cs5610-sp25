@@ -1,126 +1,97 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
-
-const assignmentsData: Record<string, { name: string; description: string }> = {
-  "123": { name: "A1 - ENV + HTML", description: "Submit a link to Netlify." },
-  "124": { name: "A2 - CSS + BOOTSTRAP", description: "Apply styles using CSS and Bootstrap." },
-  "125": { name: "A3 - JAVASCRIPT + REACT", description: "Build interactive components using React." }
-};
-
+import assignments from "../../Database/assignments.json"; // Import assignments data
 
 export default function AssignmentEditor() {
-  const { aid } = useParams(); // Get assignment ID from URL
+    const { cid, aid } = useParams(); // Get Course ID and Assignment ID from URL
+    const assignment = assignments.find(a => a._id === aid); // Find the selected assignment
 
-  // Lookup assignment details, default to "Unknown Assignment"
-  const assignment = assignmentsData[aid ?? ""] || { name: "Unknown Assignment", description: "No description available." };
+    // Default values if assignment is not found
+    const defaultAssignment = { 
+        title: "Unknown Assignment", 
+        description: "No description available.", 
+        points: 100, 
+        dueDate: "2024-05-13T23:59", 
+        availableDate: "2024-05-06T00:00", 
+        untilDate: "2024-05-20T12:00" 
+    };
 
-  return (
-    <Container className="p-4">
-      <h2>Edit Assignment</h2>
+    const selectedAssignment = assignment || defaultAssignment;
 
-      <Form>
-        {/* Assignment Name and Description */}
-        <Form.Group className="mb-3">
-          <Form.Label>Assignment Name</Form.Label>
-          <Form.Control defaultValue={assignment.name} />
-        </Form.Group>
+    return (
+        <Container className="p-4">
+            <h2 className="mb-4">Assignment Editor</h2>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Description</Form.Label>
-          <Form.Control as="textarea" rows={3} defaultValue={assignment.description} />
-        </Form.Group>
-
-        {/* Points and Assignment Group in a row */}
-        <Row className="mb-3">
-          <Col>
-            <Form.Group>
-              <Form.Label>Points</Form.Label>
-              <Form.Control type="number" defaultValue="100" />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group>
-              <Form.Label>Assignment Group</Form.Label>
-              <Form.Select defaultValue="Assignments">
-                <option>Assignments</option>
-              </Form.Select>
-            </Form.Group>
-          </Col>
-        </Row>
-
-        {/* Display Grade As */}
-        <Form.Group className="mb-3">
-          <Form.Label>Display Grade As</Form.Label>
-          <Form.Select>
-            <option>Percentage</option>
-            <option>Points</option>
-          </Form.Select>
-        </Form.Group>
-
-        {/* Submission Type */}
-        <Form.Group className="mb-3">
-          <Form.Label>Submission Type</Form.Label>
-          <Form.Select>
-            <option>Online</option>
-            <option>Text Entry</option>
-            <option>Website URL</option>
-            <option>Media Recordings</option>
-            <option>Student Annotation</option>
-            <option>File Uploads</option>
-          </Form.Select>
-        </Form.Group>
-
-        {/* Online Entry Options inside a Card */}
-        <Card className="mb-3 p-3">
-          <Card.Body>
-            <Card.Title>Online Entry Options</Card.Title>
-            <Form.Check type="checkbox" label="Text Entry" />
-            <Form.Check type="checkbox" label="Website URL" />
-            <Form.Check type="checkbox" label="Media Recordings" />
-            <Form.Check type="checkbox" label="Student Annotation" />
-            <Form.Check type="checkbox" label="File Uploads" />
-          </Card.Body>
-        </Card>
-
-        {/* Assign Section */}
-        <Form.Group className="mb-3">
-          <Form.Label>Assign To</Form.Label>
-          <Form.Control defaultValue="Everyone" />
-        </Form.Group>
-
-        {/* Due Dates Section inside a Card */}
-        <Card className="mb-3 p-3">
-          <Card.Body>
-            <Card.Title>Due Dates</Card.Title>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Due</Form.Label>
-                  <Form.Control type="date" defaultValue="2024-05-13" />
+            <Form>
+                {/* Assignment Name */}
+                <Form.Group className="mb-3">
+                    <Form.Label>Assignment Name</Form.Label>
+                    <Form.Control defaultValue={selectedAssignment.title} readOnly />
                 </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Available From</Form.Label>
-                  <Form.Control type="date" defaultValue="2024-05-06" />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Until</Form.Label>
-                  <Form.Control type="date" defaultValue="2024-05-20" />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
 
-        {/* Buttons */}
-        <div className="d-flex justify-content-end">
-          <Button variant="secondary" className="me-2">Cancel</Button>
-          <Button variant="danger">Save</Button>
-        </div>
-      </Form>
-    </Container>
-  );
+                {/* Assignment Instructions */}
+                <Card className="mb-3 p-3">
+                    <Card.Body>
+                        <Card.Text className="text-danger fw-bold">The assignment is available online</Card.Text>
+                        <p>Submit a link to the landing page of your Web application running on <a href="https://www.netlify.com/" target="_blank" rel="noopener noreferrer">Netlify</a>.</p>
+                        <p>The landing page should include the following:</p>
+                        <ul>
+                            <li>Your full name and section</li>
+                            <li>Links to each of the lab assignments</li>
+                            <li>Link to the Kanbas application</li>
+                            <li>Links to all relevant source code repositories</li>
+                        </ul>
+                        <p>The <a href="https://www.kanbas.com/" target="_blank" rel="noopener noreferrer">Kanbas</a> application should include a link to navigate back to the landing page.</p>
+                    </Card.Body>
+                </Card>
+
+                {/* Points */}
+                <Form.Group className="mb-3">
+                    <Form.Label>Points</Form.Label>
+                    <Form.Control type="number" defaultValue={selectedAssignment.points} />
+                </Form.Group>
+
+                {/* Assign Section */}
+                <Form.Group className="mb-3">
+                    <Form.Label>Assign To</Form.Label>
+                    <Form.Control defaultValue="Everyone" />
+                </Form.Group>
+
+                {/* Due Dates Section inside a Card */}
+                <Card className="mb-3 p-3">
+                    <Card.Body>
+                        <Card.Title>Due Dates</Card.Title>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Due</Form.Label>
+                                    <Form.Control type="datetime-local" defaultValue={selectedAssignment.dueDate} />
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Available From</Form.Label>
+                                    <Form.Control type="datetime-local" defaultValue={selectedAssignment.availableDate} />
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Until</Form.Label>
+                                    <Form.Control type="datetime-local" defaultValue={selectedAssignment.untilDate} />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
+
+                {/* Buttons */}
+                <div className="d-flex justify-content-end">
+                    <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+                        <Button variant="secondary" className="me-2">Cancel</Button>
+                    </Link>
+                    <Button variant="danger">Save</Button>
+                </div>
+            </Form>
+        </Container>
+    );
 }

@@ -1,9 +1,12 @@
 import { Form, Button, InputGroup } from "react-bootstrap";
 import { FaSearch, FaPlus } from "react-icons/fa";
 import { Link, useParams } from "react-router-dom";
+import assignments from "../../Database/assignments.json"; 
 
 export default function Assignments() {
-  const { cid } = useParams();
+  const { cid } = useParams(); 
+  const filteredAssignments = assignments.filter(a => a.course === cid);
+
   return (
     <div className="p-4">
       <h3 className="mb-3">Assignments</h3>
@@ -27,20 +30,20 @@ export default function Assignments() {
 
       {/* Assignments List */}
       <div className="list-group">
-        <Link to={`/Kambaz/Courses/${cid}/Assignments/123`} className="list-group-item list-group-item-action">
-          <h5 className="mb-1">A1 - ENV + HTML</h5>
-          <small className="text-muted">Due May 13 at 11:59pm | 100pts</small>
-        </Link>
-
-        <Link to={`/Kambaz/Courses/${cid}/Assignments/124`} className="list-group-item list-group-item-action">
-          <h5 className="mb-1">A2 - CSS + BOOTSTRAP</h5>
-          <small className="text-muted">Due May 20 at 11:59pm | 100pts</small>
-        </Link>
-
-        <Link to={`/Kambaz/Courses/${cid}/Assignments/125`} className="list-group-item list-group-item-action">
-          <h5 className="mb-1">A3 - JAVASCRIPT + REACT</h5>
-          <small className="text-muted">Due May 27 at 11:59pm | 100pts</small>
-        </Link>
+        {filteredAssignments.length > 0 ? (
+          filteredAssignments.map(assignment => (
+            <Link 
+              key={assignment._id} 
+              to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`} 
+              className="list-group-item list-group-item-action"
+            >
+              <h5 className="mb-1">{assignment.title}</h5>
+              <small className="text-muted">Due May 20 at 11:59pm | 100pts</small>
+            </Link>
+          ))
+        ) : (
+          <p className="text-muted">No assignments available for this course.</p>
+        )}
       </div>
     </div>
   );
