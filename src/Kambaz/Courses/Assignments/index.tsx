@@ -1,35 +1,50 @@
+import { Form, Button, InputGroup } from "react-bootstrap";
+import { FaSearch, FaPlus } from "react-icons/fa";
+import { Link, useParams } from "react-router-dom";
+import assignments from "../../Database/assignments.json"; 
+
 export default function Assignments() {
-    return (
-      <div id="wd-assignments">
-        <input id="wd-search-assignment"
-               placeholder="Search for Assignments" />
-        <button id="wd-add-assignment-group">+ Group</button>
-        <button id="wd-add-assignment">+ Assignment</button>
-        <h3 id="wd-assignments-title">
-          ASSIGNMENTS 40% of Total <button>+</button>
-        </h3>
-        <ul id="wd-assignment-list">
-          <li className="wd-assignment-list-item">
-            <a className="wd-assignment-link"
-              href="#/Kambaz/Courses/1234/Assignments/123">
-              A1 - ENV + HTML
-            </a>
-            <p>Due May 13 at 11:59pm | 100pts</p>
-          </li>
-          <li className="wd-assignment-list-item">
-            <a className="wd-assignment-link"
-              href="#/Kambaz/Courses/1234/Assignments/124">
-              A2 - CSS + BOOTSTRAP
-            </a>
-            <p>Due May 20 at 11:59pm | 100pts</p> 
-          </li>
-          <li className="wd-assignment-list-item">
-            <a className="wd-assignment-link"
-              href="#/Kambaz/Courses/1234/Assignments/125">
-              A3 - JAVASCRIPT + REACT
-            </a>
-            <p>Due May 27 at 11:59pm | 100pts</p> 
-          </li>
-        </ul>
+  const { cid } = useParams(); 
+  const filteredAssignments = assignments.filter(a => a.course === cid);
+
+  return (
+    <div className="p-4">
+      <h3 className="mb-3">Assignments</h3>
+
+      {/* Search Bar & Buttons */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <InputGroup className="w-50">
+          <InputGroup.Text>
+            <FaSearch />
+          </InputGroup.Text>
+          <Form.Control placeholder="Search for Assignments" />
+        </InputGroup>
+
+        <div>
+          <Button variant="light" className="me-2">+ Group</Button>
+          <Button variant="danger">
+            <FaPlus className="me-2" />  Assignment
+          </Button>
+        </div>
       </div>
-  );}
+
+      {/* Assignments List */}
+      <div className="list-group">
+        {filteredAssignments.length > 0 ? (
+          filteredAssignments.map(assignment => (
+            <Link 
+              key={assignment._id} 
+              to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`} 
+              className="list-group-item list-group-item-action"
+            >
+              <h5 className="mb-1">{assignment.title}</h5>
+              <small className="text-muted">Due May 20 at 11:59pm | 100pts</small>
+            </Link>
+          ))
+        ) : (
+          <p className="text-muted">No assignments available for this course.</p>
+        )}
+      </div>
+    </div>
+  );
+}

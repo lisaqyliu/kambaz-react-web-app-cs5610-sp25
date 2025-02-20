@@ -1,0 +1,132 @@
+body   {  margin: 0;  padding: 0;  }
+body * {  font-family: Arial, Helvetica, sans-serif;  }
+
+@media (min-width: 768px) {
+  #wd-kambaz .wd-main-content-offset {
+    padding-left: 140px !important;
+  }
+}
+
+.list-group.wd > .list-group-item.active {
+  color: black;
+  background-color:white;
+  border-left: 3px solid black !important;
+}
+
+.btn-secondary {
+  --bs-btn-color: #000 !important;
+  --bs-btn-bg: #c7cdd1 !important;
+  --bs-btn-border-color: #c7cdd1 !important;
+  --bs-btn-hover-color: #fff !important;
+}
+.bg-secondary {
+  --bs-secondary-rgb: 199, 205, 209;
+}
+.list-group-item {
+  --bs-list-group-border-color: gray;
+}
+
+.wd-module {
+  background-color: transparent;
+  padding-top: 10px !important;
+  padding-bottom: 0% !important;
+  padding-left: 0% !important;
+  padding-right: 0% !important;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0 !important; 
+}
+
+.wd-lessons {
+  border-left: 1.5px solid green !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  width: 100%;
+  margin-bottom: 0 !important; 
+}
+.wd-module + .wd-module {
+  margin-top: 20px !important;  
+}
+  
+.wd-lesson:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.list-group {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+
+
+
+.wd-lesson {
+  background-color: white !important;
+  padding: 10px 12px !important;
+  border-left: none !important;
+}
+
+.wd-lesson:hover {
+  background-color: lightblue; 
+}
+
+#wd-courses h2 {
+  color: black !important; 
+}
+
+#wd-courses h2 svg {
+  color: black !important; 
+}
+
+/* Dashboard Container */
+#wd-dashboard {
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Course Grid */
+#wd-dashboard-courses {
+  display: flex;
+  justify-content: center;
+}
+
+/* Course Card Styling */
+.wd-course-card {
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+}
+
+.wd-course-card:hover {
+  transform: scale(1.03);
+}
+
+/* Course Image */
+.wd-course-image {
+  height: 160px;
+  object-fit: cover;
+}
+
+/* Course Title */
+.wd-dashboard-course-title {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #0d6efd;
+}
+
+/* Course Description (Limit to 2 Lines) */
+.wd-dashboard-course-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9rem;
+}
+
+/* Button */
+.wd-dashboard-course-button {
+  width: 30%;
+  margin-top: 10px;
+}

@@ -1,81 +1,61 @@
+import { useParams } from "react-router-dom";
+import { Row, Col, ListGroup, Container } from "react-bootstrap";
+import ModuleControlButtons from "./ModuleControlButtons";
+import LessonControlButtons from "./LessonControlButtons";
+import { BsGripVertical } from "react-icons/bs";
+import modules from "../../Database/modules.json"; // Import modules data
+
 export default function Modules() {
-    // Function for handling Collapse All
-    function handleCollapseAll(){
-        
-    }
-    //Function for handling Expand All
-    function handleExpandAll(){
+    const { cid } = useParams(); // Get Course ID from URL
+    const filteredModules = modules.filter(module => module.course === cid); // Get modules for selected course
 
-    }
-    //Function for handling View Progress
-    function handleViewProgress(){
-
-    }
-    //Function for handling Publish All
-    function handlePublishAll(){
-
-    }
     return (
-      <div>
-        {/* Implement Collapse All button, View Progress button, etc. */}
-        <div className="wd-modules-top-menu">
-            <button onClick={handleCollapseAll} className="wd-button wd-collapse-all">Collapse All</button>
-            <button onClick={handleExpandAll} className="wd-button wd-expand-all">Expand All</button>
-            <button onClick={handleViewProgress} className="wd-button wd-view-progress">View Progress</button>
-            <button onClick={handlePublishAll} className="wd-button wd-publish-all">Publish All</button>
-        </div>
-        <ul id="wd-modules">
-          <li className="wd-module">
-            <div className="wd-title">Week 1, Lecture 1 - Course Introduction, Syllabus, Agenda</div>
-            <ul className="wd-lessons">
-              <li className="wd-lesson">
-                <span className="wd-title">LEARNING OBJECTIVES</span>
-                <ul className="wd-content">
-                  <li className="wd-content-item">Introduction to the course</li>
-                  <li className="wd-content-item">Learn what is Web Development</li>
-                </ul>
-              </li>
-              <li className="wd-lesson">
-                <span className="wd-title">READING</span>
-                <ul className="wd-content">
-                    <li className="wd-content-item">Full Stack Developer - Chapter 1 - Introduction</li>
-                    <li className="wd-content-item">Full Stack Developer - Chapter 2 - Ctreate User</li>
-                </ul>
-              </li>
-              <li className="wd-lesson">
-                <span className="wd-title">SLIDES</span>
-                <ul className="wd-content">
-                    <li className="wd-content-item">Introduction to Web Development</li>
-                    <li className="wd-content-item">Ctreating an HTTP server with Node.js</li>
-                    <li className="wd-content-item">Creating a React Application</li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li className="wd-module">
-            <div className="wd-title">Week 1, Lecture 2 - Formatting User Interfaces with HTML</div>
-            <ul className="wd-lessons">
-              <li className="wd-lesson">
-                <span className="wd-title">LEARNING OBJECTIVES</span>
-                <ul className="wd-content">
-                    <li className="wd-content-item">Learn how to create user interfaces with HTML</li>
-                    <li className="wd-content-item">Deploy the assignment to Netlify</li>
-                </ul>
-              </li>
-              <li className="wd-lesson">
-                <span className="wd-title">SLIDES</span>
-                <ul className="wd-content">
-                    <li className="wd-content-item">Introduction to HTML and the DOM</li>
-                    <li className="wd-content-item">Formatting Web content with Headings and </li>
-                    <li className="wd-content-item">Formatting content with Lists and Tables</li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li className="wd-module">
-          <div className="wd-title">Week 2</div>
-          </li>
-        </ul>
-      </div>
-  );
+        <Container fluid>
+            {/* Course Title */}
+            <Row className="mb-3">
+                <Col xs={12} className="d-flex justify-content-start">
+                    <h2 className="fw-bold">Modules for Course {cid}</h2>
+                </Col>
+            </Row>
+
+            {/* Modules List */}
+            <Row>
+                <Col xs={12}>
+                    <ListGroup className="rounded-0" id="wd-modules">
+                        {filteredModules.length > 0 ? (
+                            filteredModules.map(module => (
+                                <ListGroup.Item key={module._id} className="wd-module p-0 mb-5 fs-5 border-gray">
+                                    {/* Module Header */}
+                                    <div className="d-flex align-items-center justify-content-between">
+                                        <div className="d-flex align-items-center">
+                                            <BsGripVertical className="me-2 fs-3" />
+                                            <span className="fw-bold wd-title">{module.name}</span>
+                                        </div>
+                                        <ModuleControlButtons />
+                                    </div>
+
+                                    {/* Render Lessons */}
+                                    {module.lessons.length > 0 && (
+                                        <ListGroup className="wd-lessons rounded-0 mt-2">
+                                            {module.lessons.map(lesson => (
+                                                <ListGroup.Item key={lesson._id} className="wd-lessons p-3 d-flex align-items-center justify-content-between">
+                                                    <div className="d-flex align-items-center">
+                                                        <BsGripVertical className="me-2 fs-3" />
+                                                        {lesson.name}
+                                                    </div>
+                                                    <LessonControlButtons />
+                                                </ListGroup.Item>
+                                            ))}
+                                        </ListGroup>
+                                    )}
+                                </ListGroup.Item>
+                            ))
+                        ) : (
+                            <p className="text-muted">No modules available for this course.</p>
+                        )}
+                    </ListGroup>
+                </Col>
+            </Row>
+        </Container>
+    );
 }
