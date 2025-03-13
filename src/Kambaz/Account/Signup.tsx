@@ -1,5 +1,4 @@
 import { Form, Button } from "react-bootstrap";
-import { Link } from "react-router";
 import { useNavigate } from "react-router";
 
 export default function Signup() {

@@ -1,8 +1,8 @@
 import { Form, Button, InputGroup } from "react-bootstrap";
 import { FaSearch, FaPlus, FaTrash } from "react-icons/fa";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment, addAssignment } from "./reducer";
+import { deleteAssignment, addAssignment, editAssignment } from "./reducer";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Assignments() {
@@ -23,7 +23,27 @@ export default function Assignments() {
   };
 
   const handleAddAssignment = () => {
-    navigate(`/Kambaz/Courses/${cid}/Assignments/new`);
+    if (currentUser?.role === "FACULTY") {
+      const newAssignment = {
+        _id: uuidv4(),
+        course: cid,
+        title: "New Assignment",
+        description: "",
+        points: 100,
+        dueDate: "",
+        availableDate: "",
+        untilDate: "",
+        editing: true
+      };
+      dispatch(addAssignment(newAssignment));
+      dispatch(editAssignment(newAssignment._id));
+      navigate(`/Kambaz/Courses/${cid}/Assignments/${newAssignment._id}`);
+    }
+  };
+
+  const handleEdit = (assignmentId: string) => {
+    dispatch(editAssignment(assignmentId));
+    navigate(`/Kambaz/Courses/${cid}/Assignments/${assignmentId}`);
   };
 
   return (
@@ -54,15 +74,15 @@ export default function Assignments() {
         {filteredAssignments.length > 0 ? (
           filteredAssignments.map((assignment: any) => (
             <div key={assignment._id} className="list-group-item d-flex justify-content-between align-items-center">
-              <Link 
-                to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`} 
-                className="text-decoration-none flex-grow-1"
+              <div
+                className="text-decoration-none flex-grow-1 cursor-pointer"
+                onClick={() => handleEdit(assignment._id)}
               >
                 <h5 className="mb-1">{assignment.title}</h5>
                 <small className="text-muted">
                   Due {assignment.dueDate || "N/A"} | {assignment.points} pts
                 </small>
-              </Link>
+              </div>
               {currentUser?.role === "FACULTY" && (
                 <Button
                   variant="outline-danger"

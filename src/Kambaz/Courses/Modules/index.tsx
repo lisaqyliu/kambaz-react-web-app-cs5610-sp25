@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Row, Col, ListGroup, Container, FormControl } from "react-bootstrap";
 import ModuleControlButtons from "./ModuleControlButtons";

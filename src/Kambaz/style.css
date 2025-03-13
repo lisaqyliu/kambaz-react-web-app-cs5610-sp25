@@ -131,7 +131,8 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
 /* Course Description (Limit to 2 Lines) */
 .wd-dashboard-course-description {
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-line-clamp: 3; /* Limit to 2 lines */
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
