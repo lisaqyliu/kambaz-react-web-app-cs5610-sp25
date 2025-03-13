@@ -1,49 +1,52 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import CourseNavigation from "./Navigation";
 import { Routes, Route, Navigate } from "react-router";
 import Modules from "./Modules";
 import Home from "./Home";
 import Assignments from "./Assignments/index";
-import AssignmentEditor from "./Assignments/Editor"; 
-import { FaBars } from "react-icons/fa"; // Import menu icon
+import AssignmentEditor from "./Assignments/Editor";
+import { FaBars } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import PeopleTable from "./People/Table";
-
-export default function Courses() {
+  
+  
+export default function Courses({ courses }: { courses: any[]; }) {
     const { cid } = useParams();
-    const [showSidebar, setShowSidebar] = useState(true); // Track sidebar visibility
+    const location = useLocation();
+    const [showSidebar, setShowSidebar] = useState(true);
+    const course = courses.find((course) => course._id === cid);
 
-    // Automatically hide sidebar on small screens
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 768) {
-                setShowSidebar(false); // Hide sidebar on small screens
+                setShowSidebar(false);
             } else {
-                setShowSidebar(true); // Show sidebar on larger screens
+                setShowSidebar(true);
             }
         };
 
         window.addEventListener("resize", handleResize);
-        handleResize(); // Call on mount
+        handleResize();
 
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    const sectionName = location.pathname.split("/")[4];
+
     return (
         <div id="wd-courses">
-            {/* Toggleable Menu Icon (Click to Show/Hide Sidebar) */}
+            {/* Breadcrumb */}
             <h2 className="text-danger d-flex align-items-center">
                 <FaBars
-                    className="me-2 d-md-none" // Only show on small screens
-                    onClick={() => setShowSidebar(!showSidebar)} // Toggle sidebar
+                    className="me-2 d-md-none"
+                    onClick={() => setShowSidebar(!showSidebar)}
                     style={{ cursor: "pointer" }}
                 />
-                Course {cid}
+                {`Course ${cid}`} {sectionName ? `> ${sectionName}` : ""}
             </h2>
             <hr />
 
             <div className="d-flex">
-                {/* Sidebar: Hide on small screens, show when toggled */}
                 {showSidebar && (
                     <div className="d-md-block d-flex flex-column">
                         <CourseNavigation />

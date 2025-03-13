@@ -1,7 +1,15 @@
-import { Form } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { Link } from "react-router";
+import { useNavigate } from "react-router";
 
 export default function Signup() {
+  const navigate = useNavigate();
+  const handleSignup = () => {
+    navigate("/Kambaz/Account/Profile");
+  }
+  const handleGoToSignin = () => {
+    navigate("/Kambaz/Account/Signin");
+  }
     return (
       <div id="wd-signup-screen" className="d-flex justify-content-center mt-5">
         <div className="w-50 p-4 border rounded shadow-sm">
@@ -16,13 +24,11 @@ export default function Signup() {
             <Form.Group className="mb-3">
               <Form.Control type="password" placeholder="Verify Password" />
             </Form.Group>
-            <Link to="/Kambaz/Account/Profile" className="btn btn-primary w-100 mb-2">
+            <Button id="wd-signmup-btn" className="btn btn-primary w-100 mb-2" onClick={handleSignup}>
               Sign up
-            </Link>
+            </Button>
           </Form>
-          <div className="text-center">
-            <Link to="/Kambaz/Account/Signin">Sign in</Link>
-          </div>
+          <Button id="wd-signin-btn" variant="primary" className="w-100" onClick={handleGoToSignin}>Sign in</Button>
         </div>
       </div>
     );

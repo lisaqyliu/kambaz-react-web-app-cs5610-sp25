@@ -1,97 +1,122 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
-import assignments from "../../Database/assignments.json"; // Import assignments data
+import { useState, useEffect } from "react";
+import { updateAssignment, editAssignment } from "./reducer";
 
 export default function AssignmentEditor() {
-    const { cid, aid } = useParams(); // Get Course ID and Assignment ID from URL
-    const assignment = assignments.find(a => a._id === aid); // Find the selected assignment
+  const { cid, aid } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    // Default values if assignment is not found
-    const defaultAssignment = { 
-        title: "Unknown Assignment", 
-        description: "No description available.", 
-        points: 100, 
-        dueDate: "2024-05-13T23:59", 
-        availableDate: "2024-05-06T00:00", 
-        untilDate: "2024-05-20T12:00" 
-    };
+  const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
+  const assignment = assignments.find((a: any) => a._id === aid);
 
-    const selectedAssignment = assignment || defaultAssignment;
+  const [form, setForm] = useState({
+    _id: aid,
+    course: cid,
+    title: "",
+    description: "",
+    points: 100,
+    dueDate: "",
+    availableDate: "",
+    untilDate: ""
+  });
 
-    return (
-        <Container className="p-4">
-            <h2 className="mb-4">Assignment Editor</h2>
+  useEffect(() => {
+    if (assignment) {
+      setForm(assignment);
+    }
+  }, [assignment]);
 
-            <Form>
-                {/* Assignment Name */}
-                <Form.Group className="mb-3">
-                    <Form.Label>Assignment Name</Form.Label>
-                    <Form.Control defaultValue={selectedAssignment.title} readOnly />
+  const handleSave = () => {
+    dispatch(updateAssignment(form));
+    dispatch(editAssignment("")); // Clear editing flag
+    navigate(`/Kambaz/Courses/${cid}/Assignments`);
+  };
+
+  const handleCancel = () => {
+    dispatch(editAssignment("")); // Clear editing flag
+    navigate(`/Kambaz/Courses/${cid}/Assignments`);
+  };
+
+  if (!assignment) return <div>Assignment not found.</div>;
+
+  return (
+    <Container className="p-4">
+      <h2 className="mb-4">Assignment Editor</h2>
+
+      <Form>
+        <Form.Group className="mb-3">
+          <Form.Label>Assignment Name</Form.Label>
+          <Form.Control
+            value={form.title}
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label>Points</Form.Label>
+          <Form.Control
+            type="number"
+            value={form.points}
+            onChange={(e) => setForm({ ...form, points: Number(e.target.value) })}
+          />
+        </Form.Group>
+
+        <Card className="mb-3 p-3">
+          <Card.Body>
+            <Card.Title>Due Dates</Card.Title>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Label>Due</Form.Label>
+                  <Form.Control
+                    type="datetime-local"
+                    value={form.dueDate}
+                    onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
+                  />
                 </Form.Group>
-
-                {/* Assignment Instructions */}
-                <Card className="mb-3 p-3">
-                    <Card.Body>
-                        <Card.Text className="text-danger fw-bold">The assignment is available online</Card.Text>
-                        <p>Submit a link to the landing page of your Web application running on <a href="https://www.netlify.com/" target="_blank" rel="noopener noreferrer">Netlify</a>.</p>
-                        <p>The landing page should include the following:</p>
-                        <ul>
-                            <li>Your full name and section</li>
-                            <li>Links to each of the lab assignments</li>
-                            <li>Link to the Kanbas application</li>
-                            <li>Links to all relevant source code repositories</li>
-                        </ul>
-                        <p>The <a href="https://www.kanbas.com/" target="_blank" rel="noopener noreferrer">Kanbas</a> application should include a link to navigate back to the landing page.</p>
-                    </Card.Body>
-                </Card>
-
-                {/* Points */}
-                <Form.Group className="mb-3">
-                    <Form.Label>Points</Form.Label>
-                    <Form.Control type="number" defaultValue={selectedAssignment.points} />
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label>Available From</Form.Label>
+                  <Form.Control
+                    type="datetime-local"
+                    value={form.availableDate}
+                    onChange={(e) => setForm({ ...form, availableDate: e.target.value })}
+                  />
                 </Form.Group>
-
-                {/* Assign Section */}
-                <Form.Group className="mb-3">
-                    <Form.Label>Assign To</Form.Label>
-                    <Form.Control defaultValue="Everyone" />
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label>Until</Form.Label>
+                  <Form.Control
+                    type="datetime-local"
+                    value={form.untilDate}
+                    onChange={(e) => setForm({ ...form, untilDate: e.target.value })}
+                  />
                 </Form.Group>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
 
-                {/* Due Dates Section inside a Card */}
-                <Card className="mb-3 p-3">
-                    <Card.Body>
-                        <Card.Title>Due Dates</Card.Title>
-                        <Row>
-                            <Col>
-                                <Form.Group>
-                                    <Form.Label>Due</Form.Label>
-                                    <Form.Control type="datetime-local" defaultValue={selectedAssignment.dueDate} />
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group>
-                                    <Form.Label>Available From</Form.Label>
-                                    <Form.Control type="datetime-local" defaultValue={selectedAssignment.availableDate} />
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group>
-                                    <Form.Label>Until</Form.Label>
-                                    <Form.Control type="datetime-local" defaultValue={selectedAssignment.untilDate} />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                    </Card.Body>
-                </Card>
-
-                {/* Buttons */}
-                <div className="d-flex justify-content-end">
-                    <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
-                        <Button variant="secondary" className="me-2">Cancel</Button>
-                    </Link>
-                    <Button variant="danger">Save</Button>
-                </div>
-            </Form>
-        </Container>
-    );
+        <div className="d-flex justify-content-end">
+          <Button variant="secondary" className="me-2" onClick={handleCancel}>Cancel</Button>
+          <Button variant="danger" onClick={handleSave}>Save</Button>
+        </div>
+      </Form>
+    </Container>
+  );
 }
