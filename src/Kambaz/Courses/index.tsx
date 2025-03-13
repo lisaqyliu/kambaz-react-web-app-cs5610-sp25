@@ -8,8 +8,7 @@ import AssignmentEditor from "./Assignments/Editor";
 import { FaBars } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import PeopleTable from "./People/Table";
-  
-  
+
 export default function Courses({ courses }: { courses: any[]; }) {
     const { cid } = useParams();
     const location = useLocation();
@@ -45,6 +44,13 @@ export default function Courses({ courses }: { courses: any[]; }) {
                 {`Course ${cid}`} {sectionName ? `> ${sectionName}` : ""}
             </h2>
             <hr />
+
+            {/* Display Course Name if Available */}
+            {course ? (
+                <h3 className="text-primary">Course Name: {course.name}</h3>
+            ) : (
+                <h3 className="text-warning">Course Not Found</h3>
+            )}
 
             <div className="d-flex">
                 {showSidebar && (
