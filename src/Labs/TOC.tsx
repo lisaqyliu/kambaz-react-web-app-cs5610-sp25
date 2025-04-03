@@ -38,14 +38,33 @@ export default function TOC() {
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link
-          href="https://github.com/lisaqyliu/kambaz-react-web-app-cs5610-sp25.git"
-          target="_blank"
-          id="wd-a5"
-        >
-          My GitHub
-        </Nav.Link>
-      </Nav.Item>
+  <Nav.Link
+    href="https://github.com/lisaqyliu/kambaz-react-web-app-cs5610-sp25"
+    target="_blank"
+    id="wd-react-repo"
+  >
+    My GitHub (React)
+  </Nav.Link>
+</Nav.Item>
+  <Nav.Item>
+    <Nav.Link
+      href="https://github.com/lisaqyliu/kambaz-node-server-app"
+      target="_blank"
+      id="wd-node-repo"
+    >
+      My GitHub (Node)
+    </Nav.Link>
+  </Nav.Item>
+  <Nav.Item>
+    <Nav.Link
+      href="https://kambaz-node-server-app-cs5610-sp25-xqs7.onrender.com"
+      target="_blank"
+      id="wd-backend"
+    >
+      Backend (Render)
+    </Nav.Link>
+  </Nav.Item>
+
     </Nav>
   );
 }
