@@ -4,6 +4,8 @@ import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
 import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
 import { Link, useLocation } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";  
+import { MdGroups } from "react-icons/md";
+
 
 export default function KambazNavigation() {
     const { pathname } = useLocation();
@@ -35,6 +37,11 @@ export default function KambazNavigation() {
             path: "/Labs", 
             icon: LiaCogSolid 
         },
+        {
+            label: "Enrollments",
+            path: "/Kambaz/Enrollments",
+            icon: MdGroups
+          },          
     ];
 
     return (

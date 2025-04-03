@@ -1,14 +1,16 @@
 import { useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
-import users from "../../Database/users.json"; // Import users data
-import enrollments from "../../Database/enrollments.json"; // Import enrollments data
+import enrollmentsJson from "../../Database/enrollments.json";
+import usersJson from "../../Database/users.json";
+const users = usersJson as unknown as any[];
+const enrollments = enrollmentsJson as any[];
 
 export default function PeopleTable() {
     const { cid } = useParams(); // Get Course ID from URL
 
     // Filter users who are enrolled in the current course
-    const enrolledUsers = users.filter(user =>
+    const enrolledUsers = users.filter((user: any) =>
         enrollments.some(enrollment => enrollment.user === user._id && enrollment.course === cid)
     );
 
@@ -26,7 +28,7 @@ export default function PeopleTable() {
                 </thead>
                 <tbody>
                     {enrolledUsers.length > 0 ? (
-                        enrolledUsers.map((user) => (
+                        enrolledUsers.map((user:any) => (
                             <tr key={user._id}>
                                 <td className="wd-full-name text-nowrap">
                                     <FaUserCircle className="me-2 fs-1 text-secondary" />

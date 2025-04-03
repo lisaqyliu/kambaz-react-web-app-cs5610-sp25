@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "./reducer";
 import { useNavigate } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
+import * as client from "./client";
+
 
 export default function Profile() {
   const [profile, setProfile] = useState<any>({});
@@ -10,6 +12,12 @@ export default function Profile() {
   const navigate = useNavigate();
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const updateProfile = async () => {
+    const updated = await client.updateUser(profile); 
+    dispatch(setCurrentUser(updated)); 
+    console.log("Profile updated:", updated);
+  };
+  
 
   const fetchProfile = () => {
     if (!currentUser) return navigate("/Kambaz/Account/Signin");
@@ -101,6 +109,7 @@ export default function Profile() {
               <option value="FACULTY">Faculty</option>
               <option value="STUDENT">Student</option>
             </Form.Select>
+            <button onClick={updateProfile} className="btn btn-primary w-100 mb-2"> Update </button>
             <Button onClick={signout} className="w-100 mb-2 btn btn-danger" id="wd-signout-btn">
               Sign out
             </Button>

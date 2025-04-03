@@ -14,7 +14,6 @@ export default function Courses({ courses }: { courses: any[]; }) {
     const location = useLocation();
     const [showSidebar, setShowSidebar] = useState(true);
     const course = courses.find((course) => course._id === cid);
-
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 768) {

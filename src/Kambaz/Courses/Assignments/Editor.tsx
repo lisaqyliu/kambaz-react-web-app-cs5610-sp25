@@ -11,6 +11,8 @@ export default function AssignmentEditor() {
 
   const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
   const assignment = assignments.find((a: any) => a._id === aid);
+  const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
+  if (currentUser?.role !== "FACULTY") {return <div className="p-4 text-danger">Unauthorized to edit assignments.</div>;}
 
   const [form, setForm] = useState({
     _id: aid,
