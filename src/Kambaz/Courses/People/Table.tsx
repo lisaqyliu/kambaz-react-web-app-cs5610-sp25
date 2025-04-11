@@ -1,21 +1,12 @@
-import { useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
-import enrollmentsJson from "../../Database/enrollments.json";
-import usersJson from "../../Database/users.json";
-const users = usersJson as unknown as any[];
-const enrollments = enrollmentsJson as any[];
+import { Link } from "react-router";
+import PeopleDetails from "./Details";
 
-export default function PeopleTable() {
-    const { cid } = useParams(); // Get Course ID from URL
-
-    // Filter users who are enrolled in the current course
-    const enrolledUsers = users.filter((user: any) =>
-        enrollments.some(enrollment => enrollment.user === user._id && enrollment.course === cid)
-    );
-
+export default function PeopleTable({users = []}: {users?: any[]}) {
     return (
         <div id="wd-people-table">
+            <PeopleDetails />
             <Table striped>
                 <thead>
                     <tr>
@@ -27,23 +18,25 @@ export default function PeopleTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    {enrolledUsers.length > 0 ? (
-                        enrolledUsers.map((user:any) => (
+                    {users.length > 0 ? (
+                        users.map((user:any) => (
                             <tr key={user._id}>
                                 <td className="wd-full-name text-nowrap">
-                                    <FaUserCircle className="me-2 fs-1 text-secondary" />
-                                    <span className="wd-first-name">{user.firstName}</span>{" "}
-                                    <span className="wd-last-name">{user.lastName}</span>
+                                    <Link to= {`/Kambaz/Account/Users/${user._id}`} className="text-decoration-none">
+                                        <FaUserCircle className="me-2 fs-1 text-secondary" />
+                                        <span className="wd-first-name">{user.firstName}</span>{" "}
+                                        <span className="wd-last-name">{user.lastName}</span>
+                                    </Link>
                                 </td>
-                                <td className="wd-login-id">{user.loginId}</td>
-                                <td className="wd-role">{user.role}</td>
-                                <td className="wd-last-activity">{user.lastActivity}</td>
-                                <td className="wd-total-activity">{user.totalActivity}</td>
+                                <td className="wd-login-id">{user.loginId || "N/A"}</td>
+                                <td className="wd-role">{user.role || "N/A"}</td>
+                                <td className="wd-last-activity">{user.lastActivity?.substring(0,10) || "N/A"}</td>
+                                <td className="wd-total-activity">{user.totalActivity || "N/A"}</td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={5} className="text-center text-muted">No users found for this course.</td>
+                            <td colSpan={5} className="text-center text-muted">No users found.</td>
                         </tr>
                     )}
                 </tbody>

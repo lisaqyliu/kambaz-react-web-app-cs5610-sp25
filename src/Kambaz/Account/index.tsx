@@ -5,6 +5,7 @@ import Signup from "./Signup";
 import AccountNavigation from "./Navigation"; // Sidebar navigation
 import { useSelector } from "react-redux";
 import Session from "./Session";
+import Users from "./Users";
 
 
 export default function Account() {
@@ -28,6 +29,8 @@ export default function Account() {
               <Route path="Signin" element={<Signin />} />
               <Route path="Profile" element={<Profile />} />
               <Route path="Signup" element={<Signup />} />
+              <Route path="/Users" element={<Users />} />
+              <Route path="/Users/:uid" element={<Users />} />
             </Routes>
           </div>
         </div>
