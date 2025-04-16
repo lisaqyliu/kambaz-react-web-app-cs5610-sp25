@@ -3,8 +3,6 @@ import Account from "./Account";
 import Dashboard from "./Dashboard";
 import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
-import Calendar from "./Calendar";
-import Inbox from "./Inbox";
 import "./style.css";
 import { useEffect, useState } from "react";
 import * as userClient from "./Account/client";
@@ -30,7 +28,7 @@ export default function Kambaz() {
       const newCourse = await courseClient.createCourse(course);
       setCourses([...courses, newCourse]);
     } catch (err) {
-      console.error("❌ Failed to create course:", err);
+      console.error("Failed to create course:", err);
     }
   };
 
@@ -40,7 +38,7 @@ export default function Kambaz() {
       await courseClient.deleteCourse(courseId);
       setCourses(courses.filter((course) => course._id !== courseId));
     } catch (err) {
-      console.error("❌ Failed to delete course:", err);
+      console.error("Failed to delete course:", err);
     }
   };
 
@@ -54,7 +52,7 @@ export default function Kambaz() {
       await courseClient.updateCourse(course);
       setCourses(courses.map((c) => c._id === course._id ? course : c));
     } catch (err) {
-      console.error("❌ Failed to update course:", err);
+      console.error("Failed to update course:", err);
     }
   };
 
@@ -64,7 +62,7 @@ export default function Kambaz() {
       const courses = await userClient.findMyCourses();
       setCourses(courses);
     } catch (err) {
-      console.error("❌ Failed to load enrolled courses:", err);
+      console.error("Failed to load enrolled courses:", err);
     }
   };
 
@@ -83,7 +81,7 @@ export default function Kambaz() {
         )
       );
     } catch (err) {
-      console.error("❌ Failed to update enrollment:", err);
+      console.error("Failed to update enrollment:", err);
     }
   };
    
@@ -101,7 +99,7 @@ export default function Kambaz() {
       );
       setCourses(mergedCourses);
     } catch (err) {
-      console.error("❌ Failed to load all courses:", err);
+      console.error("Failed to load all courses:", err);
     }
   };
 
@@ -143,16 +141,8 @@ export default function Kambaz() {
                 <Courses courses={courses} />
               </ProtectedRoute>
             } />
-            <Route path="/Calendar" element={
-              <ProtectedRoute>
-                <Calendar />
-              </ProtectedRoute>
-            } />
-            <Route path="/Inbox" element={
-              <ProtectedRoute>
-                <Inbox />
-              </ProtectedRoute>
-            } />
+            <Route path="/Calendar" element={<h1>Calendar</h1>} />
+            <Route path="/Inbox" element={<h1>Inbox</h1>} />
             <Route path="/Enrollments" element={<Enrollments />} />
           </Routes>
         </div>

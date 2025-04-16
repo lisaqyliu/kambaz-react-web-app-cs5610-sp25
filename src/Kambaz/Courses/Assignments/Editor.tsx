@@ -16,9 +16,9 @@ export default function AssignmentEditor() {
   const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
   const assignment = assignments.find((a: any) => a._id?.toString() === aid);
   const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
-  console.log("📍 Editor CID:", cid);
-  console.log("📍 Editor AID:", aid);
-  console.log("📍 Redux Assignments:", assignments);
+  console.log("Editor CID:", cid);
+  console.log("Editor AID:", aid);
+  console.log("Redux Assignments:", assignments);
   if (currentUser?.role !== "FACULTY") {return <div className="p-4 text-danger">Unauthorized to edit assignments.</div>;}
 
   const [form, setForm] = useState({
@@ -39,7 +39,7 @@ export default function AssignmentEditor() {
           const modules = await findModulesForCourse(cid);
           const moduleId = modules[0]?._id;
           if (!moduleId) {
-            console.warn("⚠️ No module found for course", cid);
+            console.warn("No module found for course", cid);
             return;
           }
   
@@ -48,7 +48,7 @@ export default function AssignmentEditor() {
             setForm({ ...result, _id: String(result._id) });
           }
         } catch (err) {
-          console.error("❌ Failed to fetch assignment by ID:", err);
+          console.error("Failed to fetch assignment by ID:", err);
         }
       } else if (assignment) {
         setForm(assignment);
@@ -69,7 +69,7 @@ export default function AssignmentEditor() {
       dispatch(editAssignment("")); 
       navigate(`/Kambaz/Courses/${cid}/Assignments`);
     } catch (err) {
-      console.error("❌ Failed to update assignment:", err);
+      console.error("Failed to update assignment:", err);
       alert("Failed to save changes. Please try again.");
     }
   };

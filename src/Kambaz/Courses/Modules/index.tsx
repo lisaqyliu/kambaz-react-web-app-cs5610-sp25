@@ -36,7 +36,7 @@ export default function Modules() {
       dispatch(addModule(newModule));
       setModuleName("");
     } catch (err) {
-      console.error("❌ Failed to create module:", err);
+      console.error("Failed to create module:", err);
     }
   };
 
@@ -46,7 +46,7 @@ export default function Modules() {
       await modulesClient.deleteModule(moduleId);
       dispatch(deleteModule(moduleId));
     } catch (err) {
-      console.error("❌ Failed to delete module:", err);
+      console.error("Failed to delete module:", err);
     }
   };
 
@@ -56,7 +56,7 @@ export default function Modules() {
       await modulesClient.updateModule(module);
       dispatch(updateModule(module));
     } catch (err) {
-      console.error("❌ Failed to update module:", err);
+      console.error("Failed to update module:", err);
     }
   };
 
@@ -67,7 +67,7 @@ export default function Modules() {
         const modules = await courseClient.findModulesForCourse(cid!);
         dispatch(setModules(modules));
       } catch (err) {
-        console.error("❌ Failed to fetch modules:", err);
+        console.error("Failed to fetch modules:", err);
       }
     };
 

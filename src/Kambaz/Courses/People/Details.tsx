@@ -19,7 +19,7 @@ export default function PeopleDetails() {
       setUser(fetchedUser);
       setName(`${fetchedUser.firstName} ${fetchedUser.lastName}`);
     } catch (err) {
-      console.error("❌ Error fetching user:", err);
+      console.error("Error fetching user:", err);
     }
   };
 

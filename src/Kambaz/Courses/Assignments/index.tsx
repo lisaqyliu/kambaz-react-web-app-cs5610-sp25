@@ -155,6 +155,7 @@ export default function Assignments() {
                   }
                   handleEdit(assignment._id);
                 }}
+                
               >
                 <h5 className="mb-1">{assignment.title}</h5>
                 <small className="text-muted">

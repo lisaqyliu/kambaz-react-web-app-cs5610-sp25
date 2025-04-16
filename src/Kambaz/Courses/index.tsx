@@ -8,7 +8,6 @@ import AssignmentEditor from "./Assignments/Editor";
 import { FaBars } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import PeopleTable from "./People/Table";
-import { useSelector } from "react-redux";
 
 export default function Courses({ courses }: { courses: any[]; }) {
     const { cid } = useParams();

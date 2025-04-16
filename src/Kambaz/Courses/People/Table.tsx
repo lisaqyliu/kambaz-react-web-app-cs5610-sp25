@@ -17,7 +17,7 @@ export default function PeopleTable() {
             setUsers(response);
             }
         } catch (err) {
-            console.error("❌ Failed to fetch users for course:", err);
+            console.error("Failed to fetch users for course:", err);
         }
         };
         loadUsers();
