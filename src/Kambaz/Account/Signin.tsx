@@ -15,13 +15,9 @@ export default function Signin() {
   const signin = async () => {
     try {
       // 1. Sign in on the server
-      await client.signin(credentials);
+      const profile = await client.signin(credentials);
       
-      // 2. Get session-backed profile
-      const profile = await client.profile();
-      console.log("Profile loaded:", profile);
-  
-      // 3. Save in Redux
+      // 2. Save in Redux
       dispatch(setCurrentUser(profile));
   
       // 4. Navigate

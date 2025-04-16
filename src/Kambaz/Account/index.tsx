@@ -10,7 +10,6 @@ import Users from "./Users";
 
 export default function Account() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  console.log("Current user:", currentUser);
 
   return (
     <Session>

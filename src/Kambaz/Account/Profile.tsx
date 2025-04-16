@@ -10,19 +10,24 @@ export default function Profile() {
   const [profile, setProfile] = useState<any>({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [success, setSuccess] = useState(false);
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const updateProfile = async () => {
-    const updated = await client.updateUser(profile); 
-    dispatch(setCurrentUser(updated)); 
-    console.log("Profile updated:", updated);
+    try {
+      const updated = await client.updateUser(profile);
+      dispatch(setCurrentUser(updated)); 
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      console.error("Error updating profile:", err);
+    }
   };
   
 
   const fetchProfile = () => {
     if (!currentUser) return navigate("/Kambaz/Account/Signin");
     setProfile(currentUser);
-    console.log("Loaded user:", currentUser);
   };
 
   const signout = () => {
@@ -31,8 +36,10 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    fetchProfile();
-  }, []);
+    if (currentUser) {
+      setProfile(currentUser);
+    }
+  }, [currentUser]);
 
   return (
     <div id="wd-profile-screen" className="d-flex justify-content-center mt-5">
