@@ -93,9 +93,6 @@ export default function Users() {
             Users
           </button>
         </div>
-
-        {/* User Table */}
-        <PeopleTable users={users} />
       </div>
     </div>
   );

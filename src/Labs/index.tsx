@@ -7,20 +7,28 @@ import Lab4 from "./Lab4";
 import Lab5 from "./Lab5";
 import store from "./store";
 import { Provider } from "react-redux";
+import "./Labs.css";
+
 export default function Labs() {
   return (
     <Provider store={store}>
-      <div className="container-fliud">
-        <h1>Labs</h1>
-        <TOC />
-        <Routes>
-          <Route path="/"    element={<Navigate to="Lab1" />} />
-          <Route path="Lab1" element={<Lab1 />} />
-          <Route path="Lab2" element={<Lab2 />} />
-          <Route path="Lab3/*" element={<Lab3 />} />
-          <Route path="Lab4/*" element={<Lab4 />} />
-          <Route path="Lab5/*" element={<Lab5 />} />
-        </Routes>
+      <div className="labs-container">
+        <div className="labs-sidebar">
+          <h1>Labs</h1>
+          <TOC />
+        </div>
+        <div className="labs-content-wrapper">
+          <div className="labs-content">
+            <Routes>
+              <Route path="/" element={<Navigate to="Lab1" />} />
+              <Route path="Lab1" element={<Lab1 />} />
+              <Route path="Lab2" element={<Lab2 />} />
+              <Route path="Lab3/*" element={<Lab3 />} />
+              <Route path="Lab4/*" element={<Lab4 />} />
+              <Route path="Lab5/*" element={<Lab5 />} />
+            </Routes>
+          </div>
+        </div>
       </div>
     </Provider>
   );

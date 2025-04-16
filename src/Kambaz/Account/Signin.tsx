@@ -19,7 +19,7 @@ export default function Signin() {
       
       // 2. Get session-backed profile
       const profile = await client.profile();
-      console.log("✅ Profile loaded:", profile);
+      console.log("Profile loaded:", profile);
   
       // 3. Save in Redux
       dispatch(setCurrentUser(profile));
@@ -27,7 +27,7 @@ export default function Signin() {
       // 4. Navigate
       navigate("/Kambaz/Dashboard");
     } catch (err) {
-      console.error("❌ Signin error:", err);
+      console.error("Signin error:", err);
       alert("Login failed. Please check your credentials.");
     }
   };

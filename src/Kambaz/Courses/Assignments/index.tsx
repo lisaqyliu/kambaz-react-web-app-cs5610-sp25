@@ -2,8 +2,11 @@ import { Form, Button, InputGroup } from "react-bootstrap";
 import { FaSearch, FaPlus, FaTrash } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment, addAssignment, editAssignment } from "./reducer";
-import { v4 as uuidv4 } from "uuid";
+import { setAssignments, deleteAssignment, addAssignment, editAssignment } from "./reducer";
+import * as assignmentsClient from "../Assignments/client";
+import { useEffect } from "react";
+import { findModulesForCourse } from "../client";
+
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -15,36 +18,105 @@ export default function Assignments() {
 
   const filteredAssignments = assignments.filter((a: any) => a.course === cid);
 
-  const handleDelete = (assignmentId: string) => {
+  const handleDelete = async (assignmentId: string) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this assignment?");
     if (confirmDelete) {
-      dispatch(deleteAssignment(assignmentId));
+      try {
+        await assignmentsClient.deleteAssignment(assignmentId);
+        dispatch(deleteAssignment(assignmentId));
+      } catch (err) {
+        console.error("Failed to delete assignment:", err);
+      }
     }
   };
-
-  const handleAddAssignment = () => {
+  
+  const handleAddAssignment = async () => {
     if (currentUser?.role === "FACULTY") {
-      const newAssignment = {
-        _id: uuidv4(),
-        course: cid,
-        title: "New Assignment",
-        description: "",
-        points: 100,
-        dueDate: "",
-        availableDate: "",
-        untilDate: "",
-        editing: true
-      };
-      dispatch(addAssignment(newAssignment));
-      dispatch(editAssignment(newAssignment._id));
-      navigate(`/Kambaz/Courses/${cid}/Assignments/${newAssignment._id}`);
+      try {
+        const modules = await findModulesForCourse(cid!);
+        if (!modules || modules.length === 0) {
+          alert("No module found for this course. Please add a module first.");
+          return;
+        }
+  
+        const moduleId = modules[0]._id;
+        const newAssignment = {
+          title: "New Assignment",
+          description: "",
+          points: 100,
+          dueDate: "",
+          availableDate: "",
+          untilDate: "",
+          module: moduleId,
+          course: cid,
+        };
+  
+        const createdAssignment = await assignmentsClient.createAssignment(moduleId, newAssignment);
+        console.log("Created assignment from backend:", createdAssignment);
+  
+        const assignmentId = createdAssignment?._id?.toString();
+        if (!assignmentId) {
+          console.error("Invalid assignment ID:", createdAssignment._id);
+          alert("Assignment creation failed: invalid ID.");
+          return;
+        }
+  
+        dispatch(addAssignment({ ...createdAssignment, course: cid, module: moduleId }));
+        dispatch(editAssignment(assignmentId));
+        navigate(`/Kambaz/Courses/${cid}/Assignments/${assignmentId}`);
+      } catch (err) {
+        console.error("Failed to add assignment:", err);
+        alert("Assignment creation failed.");
+      }
     }
   };
-
+  
   const handleEdit = (assignmentId: string) => {
+    console.log("Navigating to Assignment:", assignmentId);
+    if (!assignmentId) {
+      console.warn("Tried to edit undefined assignment!");
+      return;
+    }
+  
     dispatch(editAssignment(assignmentId));
     navigate(`/Kambaz/Courses/${cid}/Assignments/${assignmentId}`);
   };
+  
+
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      if (!cid) return;
+      try {
+        const modules = await findModulesForCourse(cid);
+        if (!modules || modules.length === 0) {
+          console.warn("No modules found for this course");
+          return;
+        }
+  
+        const moduleId = modules[0]._id;
+        const fetchedAssignments = await assignmentsClient.findAssignmentsForModule(moduleId);
+        
+        console.log("Raw fetched assignments:", fetchedAssignments);
+        const enriched = fetchedAssignments.map((a: any, index: number) => {
+          // Generate a temporary ID if none exists
+          const assignmentId = a._id || `temp-${moduleId}-${index}`;
+          
+          return {
+            ...a,
+            course: cid,
+            _id: assignmentId
+          };
+        });
+        
+        console.log("Enriched assignment list:", enriched);
+        dispatch(setAssignments(enriched));
+      } catch (err) {
+        console.error("Failed to fetch assignments:", err);
+      }
+    };
+  
+    fetchAssignments();
+  }, [cid, dispatch]);
 
   return (
     <div className="p-4">
@@ -72,11 +144,17 @@ export default function Assignments() {
       {/* Assignments List */}
       <div className="list-group">
         {filteredAssignments.length > 0 ? (
-          filteredAssignments.map((assignment: any) => (
-            <div key={assignment._id} className="list-group-item d-flex justify-content-between align-items-center">
+          filteredAssignments.map((assignment: any, index: number) => (
+            <div key={assignment._id || `index-${index}`} className="list-group-item d-flex justify-content-between align-items-center">
               <div
                 className="text-decoration-none flex-grow-1 cursor-pointer"
-                onClick={() => handleEdit(assignment._id)}
+                onClick={() => {
+                  if (!assignment._id) {
+                    console.warn("Skipping assignment with missing ID:", assignment);
+                    return;
+                  }
+                  handleEdit(assignment._id);
+                }}
               >
                 <h5 className="mb-1">{assignment.title}</h5>
                 <small className="text-muted">

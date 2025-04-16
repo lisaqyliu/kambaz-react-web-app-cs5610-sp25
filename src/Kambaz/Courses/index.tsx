@@ -1,6 +1,6 @@
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, Navigate } from "react-router-dom";
 import CourseNavigation from "./Navigation";
-import { Routes, Route, Navigate } from "react-router";
+import { Routes, Route } from "react-router";
 import Modules from "./Modules";
 import Home from "./Home";
 import Assignments from "./Assignments/index";
@@ -8,12 +8,14 @@ import AssignmentEditor from "./Assignments/Editor";
 import { FaBars } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import PeopleTable from "./People/Table";
+import { useSelector } from "react-redux";
 
 export default function Courses({ courses }: { courses: any[]; }) {
     const { cid } = useParams();
     const location = useLocation();
     const [showSidebar, setShowSidebar] = useState(true);
     const course = courses.find((course) => course._id === cid);
+
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 768) {
@@ -64,7 +66,14 @@ export default function Courses({ courses }: { courses: any[]; }) {
                         <Route path="Home" element={<Home />} />
                         <Route path="Modules" element={<Modules />} />
                         <Route path="Assignments" element={<Assignments />} />
-                        <Route path="Assignments/:aid" element={<AssignmentEditor />} />
+                        <Route
+                        path="Assignments/:aid"
+                        element={<AssignmentEditor />}
+                        />
+                        <Route
+                        path="Assignments/undefined"
+                        element={<Navigate to="../Assignments" replace />}
+                        />
                         <Route path="People" element={<PeopleTable />} />
                     </Routes>
                 </div>

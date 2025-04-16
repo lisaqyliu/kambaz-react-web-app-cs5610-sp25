@@ -16,8 +16,8 @@ const assignmentsSlice = createSlice({
 
     addAssignment: (state, { payload }) => {
       const newAssignment = {
-        _id: uuidv4(),
         ...payload,
+        _id: payload._id,
       };
       console.log("➕ Adding New Assignment:", newAssignment);
       state.assignments = [...state.assignments, newAssignment] as any;

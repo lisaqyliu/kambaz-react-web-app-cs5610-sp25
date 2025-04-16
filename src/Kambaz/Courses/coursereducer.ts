@@ -1,18 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import db from "./../Database";
 import { v4 as uuidv4 } from "uuid";
-
-type Course = {
-  _id: string;
-  name: string;
-  number: string;
-  department: string;
-  startDate: string;
-  endDate: string;
-  credits: number;
-  description: string;
-  img: string;
-};
+import { Course } from "../../types";
 
 type CourseState = {
   courses: Course[];

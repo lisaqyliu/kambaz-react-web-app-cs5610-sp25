@@ -3,15 +3,22 @@ import { useSelector, useDispatch } from "react-redux";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { updateAssignment, editAssignment } from "./reducer";
+import * as assignmentsClient from "./client";
+import { findModulesForCourse } from "../client";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+
 
   const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
-  const assignment = assignments.find((a: any) => a._id === aid);
+  const assignment = assignments.find((a: any) => a._id?.toString() === aid);
   const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
+  console.log("📍 Editor CID:", cid);
+  console.log("📍 Editor AID:", aid);
+  console.log("📍 Redux Assignments:", assignments);
   if (currentUser?.role !== "FACULTY") {return <div className="p-4 text-danger">Unauthorized to edit assignments.</div>;}
 
   const [form, setForm] = useState({
@@ -26,15 +33,45 @@ export default function AssignmentEditor() {
   });
 
   useEffect(() => {
-    if (assignment) {
-      setForm(assignment);
-    }
-  }, [assignment]);
+    const fetchAssignment = async () => {
+      if (!assignment && cid && aid) {
+        try {
+          const modules = await findModulesForCourse(cid);
+          const moduleId = modules[0]?._id;
+          if (!moduleId) {
+            console.warn("⚠️ No module found for course", cid);
+            return;
+          }
+  
+          const result = await assignmentsClient.findAssignmentById(aid, moduleId);
+          if (result) {
+            setForm({ ...result, _id: String(result._id) });
+          }
+        } catch (err) {
+          console.error("❌ Failed to fetch assignment by ID:", err);
+        }
+      } else if (assignment) {
+        setForm(assignment);
+      }
+      setLoading(false);
+    };
+  
+    fetchAssignment();
+  }, [assignment, cid, aid]);
+  
+  
+  
 
-  const handleSave = () => {
-    dispatch(updateAssignment(form));
-    dispatch(editAssignment("")); // Clear editing flag
-    navigate(`/Kambaz/Courses/${cid}/Assignments`);
+  const handleSave = async () => {
+    try {
+      const updated = await assignmentsClient.updateAssignment(form);
+      dispatch(updateAssignment(updated));
+      dispatch(editAssignment("")); 
+      navigate(`/Kambaz/Courses/${cid}/Assignments`);
+    } catch (err) {
+      console.error("❌ Failed to update assignment:", err);
+      alert("Failed to save changes. Please try again.");
+    }
   };
 
   const handleCancel = () => {
@@ -42,7 +79,17 @@ export default function AssignmentEditor() {
     navigate(`/Kambaz/Courses/${cid}/Assignments`);
   };
 
-  if (!assignment) return <div>Assignment not found.</div>;
+  
+  
+  if (loading) {
+    return <div className="p-4 text-muted">Loading assignment...</div>;
+  }
+  
+  if (!form.title) {
+    return <div className="p-4 text-danger">Assignment not found.</div>;
+  }
+  
+  
 
   return (
     <Container className="p-4">
@@ -52,7 +99,7 @@ export default function AssignmentEditor() {
         <Form.Group className="mb-3">
           <Form.Label>Assignment Name</Form.Label>
           <Form.Control
-            value={form.title}
+            value={form.title ?? ""}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
           />
         </Form.Group>
@@ -62,7 +109,7 @@ export default function AssignmentEditor() {
           <Form.Control
             as="textarea"
             rows={3}
-            value={form.description}
+            value={form.description ?? ""}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
         </Form.Group>
@@ -71,7 +118,7 @@ export default function AssignmentEditor() {
           <Form.Label>Points</Form.Label>
           <Form.Control
             type="number"
-            value={form.points}
+            value={form.points ?? ""}
             onChange={(e) => setForm({ ...form, points: Number(e.target.value) })}
           />
         </Form.Group>
@@ -85,7 +132,7 @@ export default function AssignmentEditor() {
                   <Form.Label>Due</Form.Label>
                   <Form.Control
                     type="datetime-local"
-                    value={form.dueDate}
+                    value={form.dueDate ?? ""}
                     onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
                   />
                 </Form.Group>
@@ -95,7 +142,7 @@ export default function AssignmentEditor() {
                   <Form.Label>Available From</Form.Label>
                   <Form.Control
                     type="datetime-local"
-                    value={form.availableDate}
+                    value={form.availableDate ?? ""}
                     onChange={(e) => setForm({ ...form, availableDate: e.target.value })}
                   />
                 </Form.Group>
@@ -105,7 +152,7 @@ export default function AssignmentEditor() {
                   <Form.Label>Until</Form.Label>
                   <Form.Control
                     type="datetime-local"
-                    value={form.untilDate}
+                    value={form.untilDate ?? ""}
                     onChange={(e) => setForm({ ...form, untilDate: e.target.value })}
                   />
                 </Form.Group>

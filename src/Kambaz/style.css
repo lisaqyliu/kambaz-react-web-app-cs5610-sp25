@@ -109,10 +109,13 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
   border-radius: 10px;
   overflow: hidden;
   transition: transform 0.2s ease-in-out;
+  user-select: none;
 }
 
 .wd-course-card:hover {
   transform: scale(1.03);
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+  transition: all 0.3s ease;
 }
 
 /* Course Image */
@@ -143,4 +146,63 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
 .wd-dashboard-course-button {
   width: 30%;
   margin-top: 10px;
+}
+
+/* Course Sidebar Styles */
+.offcanvas {
+  width: 400px !important;
+}
+
+.offcanvas-title {
+  color: #0d6efd;
+  font-weight: bold;
+}
+
+.offcanvas-body h3 {
+  color: #0d6efd;
+  margin-bottom: 1rem;
+}
+
+.offcanvas-body h4 {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin: 1rem 0;
+}
+
+.offcanvas-body p {
+  color: #495057;
+  line-height: 1.6;
+}
+
+/* Course List Popup Styles */
+.offcanvas .list-group-item {
+  transition: background-color 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.offcanvas .list-group-item:hover {
+  background-color: #f8f9fa;
+  border-left: 3px solid #0d6efd;
+}
+
+.offcanvas .list-group-item h6 {
+  color: #0d6efd;
+  margin-bottom: 0.25rem;
+}
+
+.offcanvas .list-group-item small {
+  display: block;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+.offcanvas-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.25rem;
+}
+
+.offcanvas-title svg {
+  font-size: 1.5rem;
+  color: #0d6efd;
 }

@@ -16,7 +16,7 @@ export default function Enrollments() {
       setEnrolledCourses(enrolled);
       setAllCourses(all);
     } catch (err) {
-      console.error("❌ Failed to load data:", err);
+      console.error("Failed to load data:", err);
     }
   };
 
@@ -48,8 +48,8 @@ export default function Enrollments() {
           {allCourses.map((course: any) => {
             const isEnrolled = enrolledCourses.some((c) => c._id == course._id);
 
-            console.log("🔍 Checking course:", course._id);
-            console.log("🧾 EnrolledCourses IDs:", enrolledCourses.map(c => c._id));
+            console.log("Checking course:", course._id);
+            console.log("EnrolledCourses IDs:", enrolledCourses.map(c => c._id));
 
             return (
               <ListGroup.Item
