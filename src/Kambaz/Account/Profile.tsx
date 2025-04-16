@@ -2,9 +2,20 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "./reducer";
 import { useNavigate } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 import * as client from "./client";
 
+// Helper function to format date for input field
+const formatDateForInput = (dateString: string | undefined): string => {
+  if (!dateString) return "";
+  try {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+  } catch (e) {
+    console.error("Date formatting error:", e);
+    return "";
+  }
+};
 
 export default function Profile() {
   const [profile, setProfile] = useState<any>({});
@@ -23,12 +34,6 @@ export default function Profile() {
       console.error("Error updating profile:", err);
     }
   };
-  
-
-  const fetchProfile = () => {
-    if (!currentUser) return navigate("/Kambaz/Account/Signin");
-    setProfile(currentUser);
-  };
 
   const signout = () => {
     dispatch(setCurrentUser(null));
@@ -38,13 +43,23 @@ export default function Profile() {
   useEffect(() => {
     if (currentUser) {
       setProfile(currentUser);
+    } else {
+      navigate("/Kambaz/Account/Signin");
     }
-  }, [currentUser]);
+  }, [currentUser, navigate]);
 
   return (
     <div id="wd-profile-screen" className="d-flex justify-content-center mt-5">
       <div className="w-50 p-4 border rounded shadow-sm">
         <h3 className="text-center mb-4">Profile</h3>
+        
+        {/* Success message */}
+        {success && (
+          <Alert variant="success" className="mb-3">
+            Profile updated successfully!
+          </Alert>
+        )}
+        
         {profile && (
           <Form>
             <Form.Group className="mb-3">
@@ -87,7 +102,7 @@ export default function Profile() {
             <Form.Group className="mb-3">
               <Form.Control
                 type="date"
-                defaultValue={profile.dob}
+                value={formatDateForInput(profile.dob)}
                 id="wd-dob"
                 onChange={(e) =>
                   setProfile({ ...profile, dob: e.target.value })
